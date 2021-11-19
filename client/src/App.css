@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+.renderCanvas {
+  width: 100%;
+  height: 100vh;
+  touch-action: none;
+}
+
+body {
+  background: rgb(30, 30, 30);
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
