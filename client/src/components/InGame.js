@@ -25,6 +25,32 @@ function onSceneReady(scene) {
   box.checkCollisions = true;
   box.physicsImpostor.physicsBody.angularDamping = 0.9;
 
+  //wheel
+  var wheel = BABYLON.MeshBuilder.CreateCylinder("wheel", {diameter: 1.5, height: 0.7, tessellation: 24}, scene);
+
+  //position for wheel right back
+  wheel.rotation.x = Math.PI/2;
+  wheel.rotation.y = Math.PI/2;
+  wheel.parent = box;
+  wheel.position = new BABYLON.Vector3(1.8, 0.2, -2.0);
+  wheel.physicsImpostor = new BABYLON.PhysicsImpostor(wheel, BABYLON.PhysicsImpostor.CylinderImpostor, {mass: 1, restitution: 0}, scene);
+  box.physicsImpostor.physicsBody.angularDamping = 0.9;
+
+  //position for wheel left back
+  var wheelLeftBack = wheel.createInstance("LeftBack");
+  wheelLeftBack.parent = box;
+  wheel.position = new BABYLON.Vector3(-1.8, 0.2, -2.0);
+
+  //position for wheel left top
+  var wheelLeftTop = wheel.createInstance("LeftTop");
+  wheelLeftTop.parent = box;
+  wheel.position = new BABYLON.Vector3(-1.8, 0.2, 2.0);
+
+  //position for wheel right top
+  var wheelRightTop = wheel.createInstance("RightTop");
+  wheelRightTop.parent = box;
+  wheel.position = new BABYLON.Vector3(1.8, 0.2, 2.0);
+
 
   camera.parent = box;
 
