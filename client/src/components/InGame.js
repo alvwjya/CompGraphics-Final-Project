@@ -26,7 +26,10 @@ function onSceneReady(scene) {
   box.physicsImpostor.physicsBody.angularDamping = 0.9;
 
   //wheel
+  const wheelMat = new BABYLON.StandardMaterial("wheelMat");
+  wheelMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/wheel.png");
   var wheel = BABYLON.MeshBuilder.CreateCylinder("wheel", {diameter: 1.5, height: 0.7, tessellation: 24}, scene);
+  wheel.material = wheelMat;
 
   //position for wheel right back
   wheel.rotation.x = Math.PI/2;
@@ -151,9 +154,17 @@ function onSceneReady(scene) {
   scene.registerBeforeRender(function () {
     if (mf === true && linearVelocity < 50) {
       translate(box, new BABYLON.Vector3(0, 0, 1), forcePower);
+      wheel.rotate(BABYLON.Axis.Y, linearVelocity/100, BABYLON.Space.LOCAL);
+      wheelLeftBack.rotate(BABYLON.Axis.Y, linearVelocity/100, BABYLON.Space.LOCAL);
+      wheelLeftTop.rotate(BABYLON.Axis.Y, linearVelocity/100, BABYLON.Space.LOCAL);
+      wheelRightTop.rotate(BABYLON.Axis.Y, linearVelocity/100, BABYLON.Space.LOCAL);
     }
     if (mb === true && linearVelocity < 15) {
       translate(box, new BABYLON.Vector3(0, 0, -1), forcePower);
+      wheel.rotate(BABYLON.Axis.Y, -1*linearVelocity/100, BABYLON.Space.LOCAL);
+      wheelLeftBack.rotate(BABYLON.Axis.Y, -1*linearVelocity/100, BABYLON.Space.LOCAL);
+      wheelLeftTop.rotate(BABYLON.Axis.Y, -1*linearVelocity/100, BABYLON.Space.LOCAL);
+      wheelRightTop.rotate(BABYLON.Axis.Y, -1*linearVelocity/100, BABYLON.Space.LOCAL);
     }
     if (rl === true) {
       if (mf === true) {
