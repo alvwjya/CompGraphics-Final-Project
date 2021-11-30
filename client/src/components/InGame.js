@@ -257,6 +257,9 @@ function onSceneReady(scene) {
 
     //Turn Left
     if (rl === true) {
+      wheelFR.rotate(BABYLON.Axis.X, -1 * linearVelocity / 100, BABYLON.Space.LOCAL);
+      wheelFL.rotate(BABYLON.Axis.X, -1 * linearVelocity / 100, BABYLON.Space.LOCAL);
+      
       if (mf === true) {
         rotate(car, new BABYLON.Vector3(0, -1, 0), turnPower);
       }
@@ -267,6 +270,9 @@ function onSceneReady(scene) {
 
     // Turn Right
     if (rr === true && angularVelocity < 0.1) {
+      wheelFR.rotate(BABYLON.Axis.X, 1 * linearVelocity / 100, BABYLON.Space.LOCAL);
+      wheelFL.rotate(BABYLON.Axis.X, 1 * linearVelocity / 100, BABYLON.Space.LOCAL);
+      
       if (mf === true) {
         rotate(car, new BABYLON.Vector3(0, 1, 0), turnPower);
       }
