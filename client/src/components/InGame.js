@@ -90,26 +90,45 @@ function onSceneReady(scene) {
       faceUV: wheelUV
     });
 
+  // Create Pivot
+  var pivotFR = new BABYLON.Mesh("pivotFR", scene);
+  pivotFR.parent = car;
+  pivotFR.position.z = (carDept / 2 - (1.458));
+  pivotFR.position.x = ((carWidth / 2) - 0.2);
+  pivotFR.position.y = 0.1;
+
+  var pivotFL = new BABYLON.Mesh("pivotFL", scene);
+  pivotFL.parent = car;
+  pivotFL.position.z = (carDept / 2 - (1.458));
+  pivotFL.position.x = -((carWidth / 2) - 0.2);
+  pivotFL.position.y = 0.1;
+
 
   // position for wheel Front Right
   wheelFR.material = wheelMat;
-  wheelFR.parent = car;
+  wheelFR.parent = pivotFR;
   wheelFR.rotation.z = Math.PI / 2
-  wheelFR.position.z = (carDept / 2 - (1.458));
-  wheelFR.position.x = -((carWidth / 2) - 0.2);
-  wheelFR.position.y = 0.1;
+  //wheelFR.position.z = (carDept / 2 - (1.458));
+  //wheelFR.position.x = -((carWidth / 2) - 0.2);
+  //wheelFR.position.y = 0.1;
 
   // position for wheel Front Left
-  var wheelFL = wheelFR.clone("wheelFL");
-  wheelFL.position.x = ((carWidth / 2) - 0.2);
+  var wheelFL = wheelFR.createInstance("wheelFL");
+  //wheelFR.position.z = (carDept / 2 - (1.458));
+  //wheelFL.position.x = ((carWidth / 2) - 0.2);
+  wheelFL.parent = pivotFL;
 
   // position for wheel Back Right
-  var wheelBR = wheelFR.clone("wheelRB");
+  var wheelBR = wheelFR.createInstance("wheelRB");
+  wheelBR.position.x = ((carWidth / 2) - 0.2);
   wheelBR.position.z = -(carDept / 2 - (1.8));
+  wheelBR.parent = car;
 
   // position for wheel Back Left
-  var wheelBL = wheelFL.clone("wheelBL");
+  var wheelBL = wheelFR.createInstance("wheelBL");
+  wheelBL.position.x = -((carWidth / 2) - 0.2);
   wheelBL.position.z = -(carDept / 2 - (1.8));
+  wheelBL.parent = car;
 
   // Make camera follow car
   camera.parent = car;
@@ -238,6 +257,10 @@ function onSceneReady(scene) {
   }
 
 
+  // Function for wheel turning
+  var theta = 0;
+  var deltaTheta = 0;
+
   // Function that run before evey frame
   scene.registerBeforeRender(function () {
 
@@ -257,9 +280,13 @@ function onSceneReady(scene) {
 
     //Turn Left
     if (rl === true) {
-      wheelFR.rotate(BABYLON.Axis.X, -1 * linearVelocity / 100, BABYLON.Space.LOCAL);
-      wheelFL.rotate(BABYLON.Axis.X, -1 * linearVelocity / 100, BABYLON.Space.LOCAL);
-      
+      if (theta > -Math.PI / 6) {
+        deltaTheta = -Math.PI / 100;
+        theta += deltaTheta;
+        pivotFR.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
+        pivotFL.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
+      }
+
       if (mf === true) {
         rotate(car, new BABYLON.Vector3(0, -1, 0), turnPower);
       }
@@ -268,16 +295,40 @@ function onSceneReady(scene) {
       }
     }
 
+    // Return wheel to straight position
+    if (rl === false) {
+      if (theta.toFixed(3) < 0) {
+        deltaTheta = Math.PI / 80;
+        theta += deltaTheta;
+        pivotFR.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
+        pivotFL.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
+      }
+    }
+
     // Turn Right
     if (rr === true && angularVelocity < 0.1) {
-      wheelFR.rotate(BABYLON.Axis.X, 1 * linearVelocity / 100, BABYLON.Space.LOCAL);
-      wheelFL.rotate(BABYLON.Axis.X, 1 * linearVelocity / 100, BABYLON.Space.LOCAL);
-      
+      if (theta < Math.PI / 6) {
+        deltaTheta = Math.PI / 100;
+        theta += deltaTheta;
+        pivotFR.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
+        pivotFL.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
+      }
+
       if (mf === true) {
         rotate(car, new BABYLON.Vector3(0, 1, 0), turnPower);
       }
       else if (mb === true && angularVelocity < 0.1) {
         rotate(car, new BABYLON.Vector3(0, -1, 0), turnPower / 1.5);
+      }
+    }
+
+    // Return wheel to straight position
+    if (rr === false) {
+      if (theta.toFixed(3) > 0) {
+        deltaTheta = -Math.PI / 80;
+        theta += deltaTheta;
+        pivotFR.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
+        pivotFL.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
       }
     }
 
