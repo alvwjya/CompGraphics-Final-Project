@@ -8,9 +8,11 @@ import "../App.css";
 function onSceneReady(scene) {
 
   /* ----------Scene Physics---------- */
+
   scene.enablePhysics(null, new BABYLON.OimoJSPlugin());
   var PhysicsEngine = scene.getPhysicsEngine();
   PhysicsEngine.setGravity(new BABYLON.Vector3(0, -30, 0));
+
 
 
   /* ----------Camera---------- */
@@ -27,9 +29,11 @@ function onSceneReady(scene) {
   */
 
 
+
   /* ----------Light---------- */
   var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
   light.intensity = 0.7;
+
 
 
   /* ----------Car---------- */
@@ -67,6 +71,7 @@ function onSceneReady(scene) {
   car.physicsImpostor = new BABYLON.PhysicsImpostor(car, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0 }, scene);
   car.checkCollisions = true;
   car.physicsImpostor.physicsBody.angularDamping = 0.9;
+
 
 
   /* ----------wheel---------- */
@@ -108,30 +113,28 @@ function onSceneReady(scene) {
   wheelFR.material = wheelMat;
   wheelFR.parent = pivotFR;
   wheelFR.rotation.z = Math.PI / 2
-  //wheelFR.position.z = (carDept / 2 - (1.458));
-  //wheelFR.position.x = -((carWidth / 2) - 0.2);
-  //wheelFR.position.y = 0.1;
 
   // position for wheel Front Left
   var wheelFL = wheelFR.createInstance("wheelFL");
-  //wheelFR.position.z = (carDept / 2 - (1.458));
-  //wheelFL.position.x = ((carWidth / 2) - 0.2);
   wheelFL.parent = pivotFL;
 
   // position for wheel Back Right
   var wheelBR = wheelFR.createInstance("wheelRB");
   wheelBR.position.x = ((carWidth / 2) - 0.2);
   wheelBR.position.z = -(carDept / 2 - (1.8));
+  wheelBR.position.y = 0.1;
   wheelBR.parent = car;
 
   // position for wheel Back Left
   var wheelBL = wheelFR.createInstance("wheelBL");
   wheelBL.position.x = -((carWidth / 2) - 0.2);
   wheelBL.position.z = -(carDept / 2 - (1.8));
+  wheelBL.position.y = 0.1;
   wheelBL.parent = car;
 
   // Make camera follow car
   camera.parent = car;
+
 
 
   /* ----------Ground---------- */
@@ -142,7 +145,10 @@ function onSceneReady(scene) {
   // Enable ground physics
   ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.9, restitution: 0 }, scene);
   ground.checkCollisions = true;
-  ground.material = new GridMaterial("mat", scene);
+  var groundMat = new BABYLON.StandardMaterial("groundMat")
+  //ground.material = new GridMaterial("mat", scene);
+  groundMat.diffuseTexture = new BABYLON.Texture("https://pbs.twimg.com/media/EDieypNW4AURSe5.jpg");
+  ground.material = groundMat;
 
   // Create ramp
   var ramp = BABYLON.Mesh.CreateBox("ramp", 5, scene);
@@ -186,6 +192,8 @@ function onSceneReady(scene) {
   var mb = false;
   var rl = false;
   var rr = false;
+
+  var direction = 1;
 
 
   /* ----------Keyboard Controller---------- */
@@ -232,13 +240,18 @@ function onSceneReady(scene) {
 
   // Declare variable
   var linearVelocity;
-  var angularVelocity;
 
   // Acceleration Value
-  const forcePower = 1;
+  const forcePower = 0.8;
 
   // Turning Speed Value
-  const turnPower = 0.2;
+  const turnPower = 0.1;
+
+  // Forward Max Speed
+  const forwardSpeed = 60;
+
+  // Reverse Max Speed
+  const reverseSpeed = 30;
 
 
   // Function for wheel rotation
@@ -252,8 +265,7 @@ function onSceneReady(scene) {
 
   // Function to get current vehicle speed
   function getValue() {
-    linearVelocity = Math.sqrt(car.physicsImpostor.getLinearVelocity().x ** 2 + car.physicsImpostor.getLinearVelocity().z ** 2);
-    angularVelocity = Math.sqrt(car.physicsImpostor.getAngularVelocity().x ** 2 + car.physicsImpostor.getAngularVelocity().z ** 2);
+    linearVelocity = (Math.sqrt(car.physicsImpostor.getLinearVelocity().x ** 2 + car.physicsImpostor.getLinearVelocity().z ** 2)).toFixed(3);
   }
 
 
@@ -266,16 +278,36 @@ function onSceneReady(scene) {
 
     getValue();
 
+    wheelRotation(direction);
+
     // Move Forward
-    if (mf === true && linearVelocity < 50) {
+    if (mf === true && linearVelocity < forwardSpeed) {
       translate(car, new BABYLON.Vector3(0, 0, 1), forcePower);
-      wheelRotation(1);
+      direction = 1;
     }
 
     // Move Backward
-    if (mb === true && linearVelocity < 15) {
-      translate(car, new BABYLON.Vector3(0, 0, -1), forcePower);
-      wheelRotation(-1);
+    if (mb === true) {
+
+      // Brake Condition
+      if (direction == 1 && linearVelocity > 0) {
+        car.physicsImpostor.friction = 5
+        //console.log("Brake")
+      }
+
+      // Check if vehicle already stoped
+      if (linearVelocity == 0) {
+        direction = -1;
+      }
+
+      // Reverse condition
+      if (direction == -1) {
+        car.physicsImpostor.friction = 1
+        if (linearVelocity < reverseSpeed) {
+          translate(car, new BABYLON.Vector3(0, 0, -1), forcePower);
+        }
+        //console.log("Reverse")
+      }
     }
 
     //Turn Left
@@ -286,13 +318,7 @@ function onSceneReady(scene) {
         pivotFR.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
         pivotFL.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
       }
-
-      if (mf === true) {
-        rotate(car, new BABYLON.Vector3(0, -1, 0), turnPower);
-      }
-      else if (mb === true) {
-        rotate(car, new BABYLON.Vector3(0, 1, 0), turnPower / 1.5);
-      }
+      rotate(car, new BABYLON.Vector3(0, -1 * direction, 0), turnPower);
     }
 
     // Return wheel to straight position
@@ -306,20 +332,14 @@ function onSceneReady(scene) {
     }
 
     // Turn Right
-    if (rr === true && angularVelocity < 0.1) {
+    if (rr === true) {
       if (theta < Math.PI / 6) {
         deltaTheta = Math.PI / 100;
         theta += deltaTheta;
         pivotFR.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
         pivotFL.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
       }
-
-      if (mf === true) {
-        rotate(car, new BABYLON.Vector3(0, 1, 0), turnPower);
-      }
-      else if (mb === true && angularVelocity < 0.1) {
-        rotate(car, new BABYLON.Vector3(0, -1, 0), turnPower / 1.5);
-      }
+      rotate(car, new BABYLON.Vector3(0, 1 * direction, 0), turnPower);
     }
 
     // Return wheel to straight position
@@ -331,6 +351,8 @@ function onSceneReady(scene) {
         pivotFL.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
       }
     }
+
+    console.log(car.physicsImpostor.friction)
 
   });
 
