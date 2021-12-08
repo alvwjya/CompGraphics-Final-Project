@@ -1,9 +1,9 @@
 import React from "react";
 import * as BABYLON from "@babylonjs/core";
-import { TerrainMaterial, GridMaterial } from "@babylonjs/materials";
 import SceneComponent from 'babylonjs-hook'; // if you install 'babylonjs-hook' NPM.
 import 'babylonjs-loaders'
 import "../App.css";
+import { pbrVertexShader } from "@babylonjs/core/Shaders/pbr.vertex";
 
 function onSceneReady(scene) {
 
@@ -53,13 +53,14 @@ function onSceneReady(scene) {
 
 
   // Load car mesh
-  BABYLON.SceneLoader.ImportMesh("", "assets/", "car.babylon", scene, function (newMeshes) {
+  BABYLON.SceneLoader.ImportMesh("", "assets/models/", "car.babylon", scene, function (newMeshes) {
     const body = newMeshes[0];
     body.scaling = new BABYLON.Vector3(1.8, 1.8, 1.8);
     body.position.y = -0.5
     body.rotation.y = Math.PI;
 
     var carMat = new BABYLON.StandardMaterial("carMat");
+    carMat.diffuseTexture = new BABYLON.Texture("/assets/texture/carBody.png", scene)
     body.material = carMat;
 
     body.parent = car;
@@ -70,37 +71,60 @@ function onSceneReady(scene) {
   // Enable car physics
   car.physicsImpostor = new BABYLON.PhysicsImpostor(car, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0 }, scene);
   car.checkCollisions = true;
-  car.physicsImpostor.physicsBody.angularDamping = 0.9;
 
 
 
-  /* ----------wheel---------- */
-
-  // Define wheel faces
-  var wheelUV = [];
-  wheelUV[0] = new BABYLON.Vector4(0, 0, 1, 1);
-  wheelUV[1] = new BABYLON.Vector4(0, 0.5, 0, 0.5);
-  wheelUV[2] = new BABYLON.Vector4(0, 0, 1, 1);
-
-  // Wheel material
-  var wheelMat = new BABYLON.StandardMaterial("wheelMat");
-  wheelMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/wheel.png");
 
 
-  // Create wheel
-  const wheelFR = BABYLON.MeshBuilder.CreateCylinder("wheelRB",
-    {
-      diameter: 1.25,
-      height: 0.6,
-      faceUV: wheelUV
-    });
 
-  // Create Pivot
+
+  // ------- WHEELS -------
+  const rimMat = new BABYLON.StandardMaterial("rimMat", scene);
+  rimMat.diffuseTexture = new BABYLON.Texture("/assets/texture/rim.png", scene);
+  rimMat.bumpTexture = new BABYLON.Texture("/assets/texture/rimBump.png", scene);
+
+  const tyreMat = new BABYLON.StandardMaterial("tyreMat");
+  tyreMat.diffuseTexture = new BABYLON.Texture("/assets/texture/tyre.png", scene);
+  tyreMat.bumpTexture = new BABYLON.Texture("/assets/texture/tyreBump.png", scene);
+  tyreMat.roughness = 50;
+
+  /*
+  const tyreMat = new BABYLON.PBRMetallicRoughnessMaterial("tyreMat", scene);
+  tyreMat.baseColor = new BABYLON.Color3(0, 0, 0);
+  tyreMat.metallic = 0;
+  tyreMat.roughness = 1.0;*/
+
+
+
+
+  // Wheel Front Right
+  const wheelFR = new BABYLON.Mesh("WheelFR", scene);
+
   var pivotFR = new BABYLON.Mesh("pivotFR", scene);
   pivotFR.parent = car;
   pivotFR.position.z = (carDept / 2 - (1.458));
   pivotFR.position.x = ((carWidth / 2) - 0.2);
   pivotFR.position.y = 0.1;
+
+  BABYLON.SceneLoader.ImportMesh("", "assets/models/", "rim.babylon", scene, function (newMeshes) {
+    const rim = newMeshes[0];
+    rim.scaling = new BABYLON.Vector3(0.85, 0.6, 0.6)
+    rim.material = rimMat;
+    rim.parent = wheelFR;
+  })
+
+  BABYLON.SceneLoader.ImportMesh("", "assets/models/", "tyre.babylon", scene, function (newMeshes) {
+    const tyre = newMeshes[0];
+    tyre.scaling = new BABYLON.Vector3(0.85, 0.6, 0.6)
+    tyre.material = tyreMat;
+    tyre.parent = wheelFR;
+  })
+
+  wheelFR.parent = pivotFR;
+
+
+  // Wheel Front Left
+  const wheelFL = new BABYLON.Mesh("wheelFL", scene);
 
   var pivotFL = new BABYLON.Mesh("pivotFL", scene);
   pivotFL.parent = car;
@@ -108,29 +132,76 @@ function onSceneReady(scene) {
   pivotFL.position.x = -((carWidth / 2) - 0.2);
   pivotFL.position.y = 0.1;
 
+  BABYLON.SceneLoader.ImportMesh("", "assets/models/", "rim.babylon", scene, function (newMeshes) {
+    const rim = newMeshes[0];
+    rim.scaling = new BABYLON.Vector3(0.85, 0.6, 0.6)
+    rim.rotation.y = Math.PI;
+    rim.material = rimMat;
+    rim.parent = wheelFL;
+  });
 
-  // position for wheel Front Right
-  wheelFR.material = wheelMat;
-  wheelFR.parent = pivotFR;
-  wheelFR.rotation.z = Math.PI / 2
+  BABYLON.SceneLoader.ImportMesh("", "assets/models/", "tyre.babylon", scene, function (newMeshes) {
+    const tyre = newMeshes[0];
+    tyre.scaling = new BABYLON.Vector3(0.85, 0.6, 0.6)
+    tyre.rotation.y = Math.PI;
+    tyre.material = tyreMat;
+    tyre.parent = wheelFL;
+  });
 
-  // position for wheel Front Left
-  var wheelFL = wheelFR.createInstance("wheelFL");
   wheelFL.parent = pivotFL;
 
-  // position for wheel Back Right
-  var wheelBR = wheelFR.createInstance("wheelRB");
+
+  // Wheel Back Right
+  const wheelBR = new BABYLON.Mesh("wheelBR", scene);
+
   wheelBR.position.x = ((carWidth / 2) - 0.2);
   wheelBR.position.z = -(carDept / 2 - (1.8));
   wheelBR.position.y = 0.1;
+
+  BABYLON.SceneLoader.ImportMesh("", "assets/models/", "rim.babylon", scene, function (newMeshes) {
+    const rim = newMeshes[0];
+    rim.scaling = new BABYLON.Vector3(0.85, 0.6, 0.6)
+    rim.material = rimMat;
+    rim.parent = wheelBR;
+  })
+
+  BABYLON.SceneLoader.ImportMesh("", "assets/models/", "tyre.babylon", scene, function (newMeshes) {
+    const tyre = newMeshes[0];
+    tyre.scaling = new BABYLON.Vector3(0.85, 0.6, 0.6)
+    tyre.material = tyreMat;
+    tyre.parent = wheelBR;
+  })
+
   wheelBR.parent = car;
 
+
   // position for wheel Back Left
-  var wheelBL = wheelFR.createInstance("wheelBL");
+  const wheelBL = new BABYLON.Mesh("wheelBL", scene);
+
   wheelBL.position.x = -((carWidth / 2) - 0.2);
   wheelBL.position.z = -(carDept / 2 - (1.8));
   wheelBL.position.y = 0.1;
+
+  BABYLON.SceneLoader.ImportMesh("", "assets/models/", "rim.babylon", scene, function (newMeshes) {
+    const rim = newMeshes[0];
+    rim.scaling = new BABYLON.Vector3(0.85, 0.6, 0.6)
+    rim.rotation.y = Math.PI;
+    rim.material = rimMat;
+    rim.parent = wheelBL;
+  })
+
+  BABYLON.SceneLoader.ImportMesh("", "assets/models/", "tyre.babylon", scene, function (newMeshes) {
+    const tyre = newMeshes[0];
+    tyre.scaling = new BABYLON.Vector3(0.85, 0.6, 0.6)
+    tyre.rotation.y = Math.PI;
+    tyre.material = tyreMat;
+    tyre.parent = wheelBL;
+  })
+
   wheelBL.parent = car;
+
+
+
 
   // Make camera follow car
   camera.parent = car;
@@ -256,10 +327,10 @@ function onSceneReady(scene) {
 
   // Function for wheel rotation
   function wheelRotation(value) {
-    wheelFR.rotate(BABYLON.Axis.Y, -value * linearVelocity / 100, BABYLON.Space.LOCAL);
-    wheelFL.rotate(BABYLON.Axis.Y, -value * linearVelocity / 100, BABYLON.Space.LOCAL);
-    wheelBR.rotate(BABYLON.Axis.Y, -value * linearVelocity / 100, BABYLON.Space.LOCAL);
-    wheelBL.rotate(BABYLON.Axis.Y, -value * linearVelocity / 100, BABYLON.Space.LOCAL);
+    wheelFR.rotate(BABYLON.Axis.X, value * linearVelocity / 100, BABYLON.Space.LOCAL);
+    wheelFL.rotate(BABYLON.Axis.X, value * linearVelocity / 100, BABYLON.Space.LOCAL);
+    wheelBR.rotate(BABYLON.Axis.X, value * linearVelocity / 100, BABYLON.Space.LOCAL);
+    wheelBL.rotate(BABYLON.Axis.X, value * linearVelocity / 100, BABYLON.Space.LOCAL);
   }
 
 
