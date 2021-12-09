@@ -73,11 +73,6 @@ function onSceneReady(scene) {
   car.checkCollisions = true;
 
 
-
-
-
-
-
   // ------- WHEELS -------
   const rimMat = new BABYLON.StandardMaterial("rimMat", scene);
   rimMat.diffuseTexture = new BABYLON.Texture("/assets/texture/rim.png", scene);
