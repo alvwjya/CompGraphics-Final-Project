@@ -3,13 +3,12 @@ import * as BABYLON from "@babylonjs/core";
 import SceneComponent from 'babylonjs-hook'; // if you install 'babylonjs-hook' NPM.
 import 'babylonjs-loaders'
 import "../App.css";
-import { pbrVertexShader } from "@babylonjs/core/Shaders/pbr.vertex";
 
 function onSceneReady(scene) {
 
   /* ----------Scene Physics---------- */
 
-  scene.enablePhysics(null, new BABYLON.OimoJSPlugin());
+  scene.enablePhysics(null, new BABYLON.AmmoJSPlugin());
   var PhysicsEngine = scene.getPhysicsEngine();
   PhysicsEngine.setGravity(new BABYLON.Vector3(0, -30, 0));
 
@@ -225,6 +224,26 @@ function onSceneReady(scene) {
   ramp.physicsImpostor = new BABYLON.PhysicsImpostor(ramp, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.9, restitution: 0 }, scene);
 
 
+  car.position.x = 150
+  car.position.z = 130;
+
+
+  BABYLON.SceneLoader.ImportMesh("", "/assets/models/", "coolS.babylon", scene, function (newMeshes) {
+    const road = newMeshes[0];
+    //road.position.y = 5;
+    //road.position.z = -100;
+    road.physicsImpostor = new BABYLON.PhysicsImpostor(road, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0.9, restitution: 0 }, scene);
+    //var physicsViewer = new BABYLON.PhysicsViewer(scene);
+    //physicsViewer.showImpostor(road.physicsImpostor, road);
+  });
+
+
+
+
+
+
+
+
   /* ----------Movement Physics---------- */
 
   // Forward & Backward force function
@@ -418,7 +437,7 @@ function onSceneReady(scene) {
       }
     }
 
-    console.log(car.physicsImpostor.friction)
+    //console.log(car.physicsImpostor.friction)
 
   });
 
