@@ -228,11 +228,14 @@ function onSceneReady(scene) {
   car.position.z = 130;
 
 
-  BABYLON.SceneLoader.ImportMesh("", "/assets/models/", "coolS.babylon", scene, function (newMeshes) {
-    const road = newMeshes[0];
-    //road.position.y = 5;
-    //road.position.z = -100;
-    road.physicsImpostor = new BABYLON.PhysicsImpostor(road, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0.9, restitution: 0 }, scene);
+  BABYLON.SceneLoader.ImportMesh("", "./assets/models/", "barrier_straight.babylon", scene, function (newMeshes) {
+    const barrier_straight = newMeshes[0];
+    barrier_straight.position.y -= 1;
+    barrier_straight.position.x = 150;
+    barrier_straight.position.z = 130;
+
+    
+    barrier_straight.physicsImpostor = new BABYLON.PhysicsImpostor(barrier_straight, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0.9, restitution: 0 }, scene);
     //var physicsViewer = new BABYLON.PhysicsViewer(scene);
     //physicsViewer.showImpostor(road.physicsImpostor, road);
   });
