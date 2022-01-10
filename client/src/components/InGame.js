@@ -82,15 +82,6 @@ function onSceneReady(scene) {
   tyreMat.bumpTexture = new BABYLON.Texture("/assets/texture/tyreBump.png", scene);
   tyreMat.roughness = 50;
 
-  /*
-  const tyreMat = new BABYLON.PBRMetallicRoughnessMaterial("tyreMat", scene);
-  tyreMat.baseColor = new BABYLON.Color3(0, 0, 0);
-  tyreMat.metallic = 0;
-  tyreMat.roughness = 1.0;*/
-
-
-
-
   // Wheel Front Right
   const wheelFR = new BABYLON.Mesh("WheelFR", scene);
 
@@ -99,6 +90,7 @@ function onSceneReady(scene) {
   pivotFR.position.z = (carDept / 2 - (1.458));
   pivotFR.position.x = ((carWidth / 2) - 0.2);
   pivotFR.position.y = 0.1;
+
 
   BABYLON.SceneLoader.ImportMesh("", "assets/models/", "rim.babylon", scene, function (newMeshes) {
     const rim = newMeshes[0];
@@ -125,6 +117,7 @@ function onSceneReady(scene) {
   pivotFL.position.z = (carDept / 2 - (1.458));
   pivotFL.position.x = -((carWidth / 2) - 0.2);
   pivotFL.position.y = 0.1;
+
 
   BABYLON.SceneLoader.ImportMesh("", "assets/models/", "rim.babylon", scene, function (newMeshes) {
     const rim = newMeshes[0];
@@ -205,45 +198,46 @@ function onSceneReady(scene) {
   /* ----------Ground---------- */
 
   // Create ground
-  var ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 1000, height: 1000 }, scene);
+  var ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 769, height: 462.5 }, scene);
 
   // Enable ground physics
   ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.9, restitution: 0 }, scene);
   ground.checkCollisions = true;
   var groundMat = new BABYLON.StandardMaterial("groundMat")
-  //ground.material = new GridMaterial("mat", scene);
   groundMat.diffuseTexture = new BABYLON.Texture("https://pbs.twimg.com/media/EDieypNW4AURSe5.jpg");
+  groundMat.diffuseTexture = new BABYLON.Texture("/assets/texture/track.jpg", scene);
   ground.material = groundMat;
 
-  // Create ramp
-  var ramp = BABYLON.Mesh.CreateBox("ramp", 5, scene);
-  ramp.rotation.x = Math.PI / 3;
-  ramp.position.y -= 1;
-
-  // Enable ramp physics
-  ramp.physicsImpostor = new BABYLON.PhysicsImpostor(ramp, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.9, restitution: 0 }, scene);
+  car.position.x = 0;
+  car.position.z = 0;
 
 
-  car.position.x = 150
-  car.position.z = 130;
+  const barriers = new BABYLON.Mesh("barriers", scene);
 
+  BABYLON.SceneLoader.ImportMesh("", "./assets/models/", "barrier.babylon", scene, function (meshes) {
 
-  BABYLON.SceneLoader.ImportMesh("", "./assets/models/", "barrier_small.babylon", scene, function (newMeshes) {
-    const barrier_straight = newMeshes[0];
-    barrier_straight.position.y = 1;
-    
+    var redMat = new BABYLON.StandardMaterial("redMat", scene);
+    redMat.diffuseColor = new BABYLON.Color3(0.8, 0, 0);
 
-    
-    barrier_straight.physicsImpostor = new BABYLON.PhysicsImpostor(barrier_straight, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0.9, restitution: 0 }, scene);
-    //var physicsViewer = new BABYLON.PhysicsViewer(scene);
-    //physicsViewer.showImpostor(road.physicsImpostor, road);
+    var whiteMat = new BABYLON.StandardMaterial("redMat", scene);
+    whiteMat.diffuseColor = new BABYLON.Color3(0.8, 0.8, 0.8);
+
+    for (let i = 0; i < meshes.length; i++) {
+      meshes[i].scaling = new BABYLON.Vector3(200, 200, 200);
+      meshes[i].physicsImpostor = new BABYLON.PhysicsImpostor(meshes[i], BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0, restitution: 0.3 }, scene);
+      if (i % 2 == 0) {
+        meshes[i].material = redMat;
+      } else {
+        meshes[i].material = whiteMat;
+      }
+      //meshes[i].rotation.y = Math.PI / 2;
+
+      meshes[i].parent = barriers;
+    }
   });
-
-
-
-
-
-
+  barriers.rotation.y = Math.PI / 2;
+  barriers.position.z = -80;
+  barriers.position.x = 150;
 
 
   /* ----------Movement Physics---------- */
@@ -275,12 +269,12 @@ function onSceneReady(scene) {
 
 
   // Keyboard value
-  var mf = false;
-  var mb = false;
-  var rl = false;
-  var rr = false;
+  let mf = false;
+  let mb = false;
+  let rl = false;
+  let rr = false;
 
-  var direction = 1;
+  let direction = 1;
 
 
   /* ----------Keyboard Controller---------- */
@@ -326,7 +320,7 @@ function onSceneReady(scene) {
   });
 
   // Declare variable
-  var linearVelocity;
+  let linearVelocity;
 
   // Acceleration Value
   const forcePower = 0.8;
@@ -335,10 +329,10 @@ function onSceneReady(scene) {
   const turnPower = 0.1;
 
   // Forward Max Speed
-  const forwardSpeed = 60;
+  const forwardSpeed = 45;
 
   // Reverse Max Speed
-  const reverseSpeed = 30;
+  const reverseSpeed = 20;
 
 
   // Function for wheel rotation
@@ -357,8 +351,8 @@ function onSceneReady(scene) {
 
 
   // Function for wheel turning
-  var theta = 0;
-  var deltaTheta = 0;
+  let theta = 0;
+  let deltaTheta = 0;
 
   // Function that run before evey frame
   scene.registerBeforeRender(function () {
