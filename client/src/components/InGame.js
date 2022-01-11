@@ -208,8 +208,9 @@ function onSceneReady(scene) {
   groundMat.diffuseTexture = new BABYLON.Texture("/assets/texture/track.jpg", scene);
   ground.material = groundMat;
 
-  car.position.x = 0;
-  car.position.z = 0;
+  car.position.x = -50;
+ 
+  car.position.z = 20;
 
 
   const barriers = new BABYLON.Mesh("barriers", scene);
@@ -235,9 +236,11 @@ function onSceneReady(scene) {
       meshes[i].parent = barriers;
     }
   });
-  barriers.rotation.y = Math.PI / 2;
-  barriers.position.z = -80;
-  barriers.position.x = 150;
+  barriers.rotation.y = 1.565;
+  barriers.scaling = new BABYLON.Vector3(1.05,1.05,1.05)
+  barriers.position.z = -93;
+  barriers.position.x = 134;
+
 
 
   /* ----------Movement Physics---------- */
