@@ -31,7 +31,7 @@ function onSceneReady(scene) {
 
   /* ----------Light---------- */
   var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-  light.intensity = 0.7;
+  light.intensity = 0.2;
 
 
 
@@ -70,6 +70,13 @@ function onSceneReady(scene) {
   // Enable car physics
   car.physicsImpostor = new BABYLON.PhysicsImpostor(car, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0 }, scene);
   car.checkCollisions = true;
+
+  //LIGHTS
+  const lightFrontLeft = new BABYLON.SpotLight("spotlightFL", new BABYLON.Vector3(-1, 1, 2), new BABYLON.Vector3(0,0, 1), Math.PI / 2, 30, scene)
+  lightFrontLeft.intensity = 0.9;
+  lightFrontLeft.parent = car;
+  
+
 
 
   // ------- WHEELS -------
@@ -209,7 +216,6 @@ function onSceneReady(scene) {
   ground.material = groundMat;
 
   car.position.x = -50;
- 
   car.position.z = 20;
 
 
