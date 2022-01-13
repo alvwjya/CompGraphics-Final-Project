@@ -31,7 +31,7 @@ function onSceneReady(scene) {
 
   /* ----------Light---------- */
   var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-  light.intensity = 0.2;
+  light.intensity = 0.1;
 
 
 
@@ -72,8 +72,10 @@ function onSceneReady(scene) {
   car.checkCollisions = true;
 
   //LIGHTS
-  const lightFrontLeft = new BABYLON.SpotLight("spotlightFL", new BABYLON.Vector3(-1, 1, 2), new BABYLON.Vector3(0,0, 1), Math.PI / 2, 30, scene)
-  lightFrontLeft.intensity = 0.9;
+  const lightFrontLeft = new BABYLON.SpotLight("spotlightFL", new BABYLON.Vector3(-1, 0.88, 3.09), new BABYLON.Vector3(0,0, 1), Math.PI / 2, 10, scene)
+  lightFrontLeft.intensity = 1;
+  lightFrontLeft.diffuse = new BABYLON.Color3(0.94,0.91,0.68);
+  lightFrontLeft.specular = new BABYLON.Color3(0.94,0.91,0.68);
   lightFrontLeft.parent = car;
   
 
