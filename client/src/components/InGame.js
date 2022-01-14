@@ -31,7 +31,7 @@ function onSceneReady(scene) {
 
   /* ----------Light---------- */
   var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-  light.intensity = 0.2;
+  light.intensity = 0.7;
 
 
 
@@ -73,13 +73,13 @@ function onSceneReady(scene) {
 
   //LIGHTS
   const lightFrontLeft = new BABYLON.SpotLight("spotlightFL", new BABYLON.Vector3(-1, 0.88, 3.12), new BABYLON.Vector3(0,0, 1), Math.PI / 2, 20, scene)
-  lightFrontLeft.intensity = 1;
+  lightFrontLeft.intensity = 0.8;
   lightFrontLeft.diffuse = new BABYLON.Color3(0.94,0.91,0.68);
   lightFrontLeft.specular = new BABYLON.Color3(0.94,0.91,0.68);
   lightFrontLeft.parent = car;
 
   const lightFrontRight = new BABYLON.SpotLight("spotlightFR", new BABYLON.Vector3(1, 0.88, 3.12), new BABYLON.Vector3(0,0, 1), Math.PI / 2, 20, scene)
-  lightFrontRight.intensity = 1;
+  lightFrontRight.intensity = 0.8;
   lightFrontRight.diffuse = new BABYLON.Color3(0.95,0.91,0.68);
   lightFrontRight.specular = new BABYLON.Color3(0.94,0.91,0.68);
   lightFrontRight.parent = car;
@@ -90,7 +90,7 @@ function onSceneReady(scene) {
   lightBackLeft.specular = new BABYLON.Color3(0.98,0,0);
   lightBackLeft.parent = car;
 
-  const lightBackRight = new BABYLON.SpotLight("spotlightBR", new BABYLON.Vector3(1, 1.19, -3.0), new BABYLON.Vector3(0,0, -1), Math.PI / 2, 10, scene)
+  const lightBackRight = new BABYLON.SpotLight("spotlightBR", new BABYLON.Vector3(1, 1.15, -3.25), new BABYLON.Vector3(0,0, -1), Math.PI / 2, 10, scene)
   lightBackRight.intensity = 0.7;
   lightBackRight.diffuse = new BABYLON.Color3(0.98,0,0);
   lightBackRight.specular = new BABYLON.Color3(0.98,0,0);
@@ -238,6 +238,13 @@ function onSceneReady(scene) {
   car.position.x = -50;
   car.position.z = 20;
 
+  var birchTree = BABYLON.SceneLoader.ImportMesh("","./assets/models/","birch_tree.babylon",scene,function(newMeshes){
+    for (let i = 0; i < newMeshes.length; i++) {
+    newMeshes[i].scaling = new BABYLON.Vector3(12,12,12);
+    newMeshes.position.x = -10;
+    newMeshes.position.z = 20;
+    
+  }});
 
   const barriers = new BABYLON.Mesh("barriers", scene);
 
