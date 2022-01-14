@@ -238,13 +238,15 @@ function onSceneReady(scene) {
   car.position.x = -50;
   car.position.z = 20;
 
-  var birchTree = BABYLON.SceneLoader.ImportMesh("","./assets/models/","birch_tree.babylon",scene,function(newMeshes){
+  BABYLON.SceneLoader.ImportMesh("","./assets/models/","birch_tree.babylon",scene,function(newMeshes){
     for (let i = 0; i < newMeshes.length; i++) {
     newMeshes[i].scaling = new BABYLON.Vector3(12,12,12);
     newMeshes.position.x = -10;
     newMeshes.position.z = 20;
     
   }});
+
+
 
   const barriers = new BABYLON.Mesh("barriers", scene);
 
@@ -257,7 +259,7 @@ function onSceneReady(scene) {
     whiteMat.diffuseColor = new BABYLON.Color3(0.8, 0.8, 0.8);
 
     for (let i = 0; i < meshes.length; i++) {
-      meshes[i].scaling = new BABYLON.Vector3(200, 200, 200);
+      meshes[i].scaling = new BABYLON.Vector3(201.05, 201.05, 201.05);
       meshes[i].physicsImpostor = new BABYLON.PhysicsImpostor(meshes[i], BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0, restitution: 0.3 }, scene);
       if (i % 2 == 0) {
         meshes[i].material = redMat;
@@ -270,7 +272,6 @@ function onSceneReady(scene) {
     }
   });
   barriers.rotation.y = 1.565;
-  barriers.scaling = new BABYLON.Vector3(1.05,1.05,1.05)
   barriers.position.z = -93;
   barriers.position.x = 134;
 
