@@ -259,7 +259,7 @@ function onSceneReady(scene) {
     whiteMat.diffuseColor = new BABYLON.Color3(0.8, 0.8, 0.8);
 
     for (let i = 0; i < meshes.length; i++) {
-      meshes[i].scaling = new BABYLON.Vector3(201.05, 201.05, 201.05);
+      meshes[i].scaling = new BABYLON.Vector3(207.35, 207.35, 207.35);
       meshes[i].physicsImpostor = new BABYLON.PhysicsImpostor(meshes[i], BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0, restitution: 0.3 }, scene);
       if (i % 2 == 0) {
         meshes[i].material = redMat;
@@ -273,7 +273,7 @@ function onSceneReady(scene) {
   });
   barriers.rotation.y = 1.565;
   barriers.position.z = -93;
-  barriers.position.x = 134;
+  barriers.position.x = 135;
 
 
 
