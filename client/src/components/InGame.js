@@ -3,6 +3,7 @@ import * as BABYLON from "@babylonjs/core";
 import SceneComponent from 'babylonjs-hook'; // if you install 'babylonjs-hook' NPM.
 import 'babylonjs-loaders'
 import "../App.css";
+import { Vector3 } from "@babylonjs/core";
 
 function onSceneReady(scene) {
 
@@ -72,30 +73,30 @@ function onSceneReady(scene) {
   car.checkCollisions = true;
 
   //LIGHTS
-  const lightFrontLeft = new BABYLON.SpotLight("spotlightFL", new BABYLON.Vector3(-1, 0.88, 3.12), new BABYLON.Vector3(0,0, 1), Math.PI / 2, 20, scene)
+  const lightFrontLeft = new BABYLON.SpotLight("spotlightFL", new BABYLON.Vector3(-1, 0.88, 3.12), new BABYLON.Vector3(0, 0, 1), Math.PI / 2, 20, scene)
   lightFrontLeft.intensity = 0.8;
-  lightFrontLeft.diffuse = new BABYLON.Color3(0.94,0.91,0.68);
-  lightFrontLeft.specular = new BABYLON.Color3(0.94,0.91,0.68);
+  lightFrontLeft.diffuse = new BABYLON.Color3(0.94, 0.91, 0.68);
+  lightFrontLeft.specular = new BABYLON.Color3(0.94, 0.91, 0.68);
   lightFrontLeft.parent = car;
 
-  const lightFrontRight = new BABYLON.SpotLight("spotlightFR", new BABYLON.Vector3(1, 0.88, 3.12), new BABYLON.Vector3(0,0, 1), Math.PI / 2, 20, scene)
+  const lightFrontRight = new BABYLON.SpotLight("spotlightFR", new BABYLON.Vector3(1, 0.88, 3.12), new BABYLON.Vector3(0, 0, 1), Math.PI / 2, 20, scene)
   lightFrontRight.intensity = 0.8;
-  lightFrontRight.diffuse = new BABYLON.Color3(0.95,0.91,0.68);
-  lightFrontRight.specular = new BABYLON.Color3(0.94,0.91,0.68);
+  lightFrontRight.diffuse = new BABYLON.Color3(0.95, 0.91, 0.68);
+  lightFrontRight.specular = new BABYLON.Color3(0.94, 0.91, 0.68);
   lightFrontRight.parent = car;
 
-  const lightBackLeft = new BABYLON.SpotLight("spotlightBL", new BABYLON.Vector3(-1, 1.19, -3.0), new BABYLON.Vector3(0,0, -1), Math.PI / 2, 10, scene)
+  const lightBackLeft = new BABYLON.SpotLight("spotlightBL", new BABYLON.Vector3(-1, 1.19, -3.0), new BABYLON.Vector3(0, 0, -1), Math.PI / 2, 10, scene)
   lightBackLeft.intensity = 0.7;
-  lightBackLeft.diffuse = new BABYLON.Color3(0.98,0,0);
-  lightBackLeft.specular = new BABYLON.Color3(0.98,0,0);
+  lightBackLeft.diffuse = new BABYLON.Color3(0.98, 0, 0);
+  lightBackLeft.specular = new BABYLON.Color3(0.98, 0, 0);
   lightBackLeft.parent = car;
 
-  const lightBackRight = new BABYLON.SpotLight("spotlightBR", new BABYLON.Vector3(1, 1.15, -3.25), new BABYLON.Vector3(0,0, -1), Math.PI / 2, 10, scene)
+  const lightBackRight = new BABYLON.SpotLight("spotlightBR", new BABYLON.Vector3(1, 1.15, -3.25), new BABYLON.Vector3(0, 0, -1), Math.PI / 2, 10, scene)
   lightBackRight.intensity = 0.7;
-  lightBackRight.diffuse = new BABYLON.Color3(0.98,0,0);
-  lightBackRight.specular = new BABYLON.Color3(0.98,0,0);
+  lightBackRight.diffuse = new BABYLON.Color3(0.98, 0, 0);
+  lightBackRight.specular = new BABYLON.Color3(0.98, 0, 0);
   lightBackRight.parent = car;
-  
+
 
 
 
@@ -238,13 +239,195 @@ function onSceneReady(scene) {
   car.position.x = -50;
   car.position.z = 20;
 
-  BABYLON.SceneLoader.ImportMesh("","./assets/models/","birch_tree.babylon",scene,function(newMeshes){
+  BABYLON.SceneLoader.ImportMesh("", "./assets/models/", "birch_tree.babylon", scene, function (newMeshes) {
     for (let i = 0; i < newMeshes.length; i++) {
-    newMeshes[i].scaling = new BABYLON.Vector3(12,12,12);
-    newMeshes.position.x = -10;
-    newMeshes.position.z = 20;
-    
-  }});
+      newMeshes[i].scaling = new BABYLON.Vector3(12, 12, 12);
+      newMeshes.position.x = -10;
+      newMeshes.position.z = 20;
+
+    }
+  });
+
+  //TREES DECORATION
+
+  const spriteTrees = new BABYLON.SpriteManager("treesManager", "./assets/models/Tree.png", 5000, { width: 2048, height: 4096 }, scene);
+
+
+  
+  //We create trees at random positions
+
+  //LEFT LANE
+  for (let i = 0; i < 85; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = (Math.random() * (-50) * 4) / 0.6 + 230;
+    tree.position.z = ((Math.random() * 15) + 3) * 12.4 - 230;
+    tree.position.y = -5.2;
+  }
+
+  for (let i = 0; i < 20; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = (Math.random() * (-20) * 4) / 0.6 + 370;
+    tree.position.z = ((Math.random() * 15) + 3) * 12.3 - 250;
+    tree.position.y = -5.2;
+  }
+
+  for (let i = 0; i < 8; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(340, 380);
+    tree.position.z = BABYLON.Scalar.RandomRange(-50, 15);
+    tree.position.y = -5.2;
+  }
+
+  //CENTER LANE
+  for (let i = 0; i < 10; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(-281, -250);
+    tree.position.z = BABYLON.Scalar.RandomRange(-105, 0);
+    tree.position.y = -5.2;
+  }
+
+
+  for (let i = 0; i < 20; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(-251, -170);
+    tree.position.z = BABYLON.Scalar.RandomRange(-165, 30);
+    tree.position.y = -5.2;
+  }
+
+  for (let i = 0; i < 12; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(-151, -50);
+    tree.position.z = BABYLON.Scalar.RandomRange(35, 45);
+    tree.position.y = -5.8;
+  }
+
+  for (let i = 0; i < 12; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(-90, 80);
+    tree.position.z = BABYLON.Scalar.RandomRange(82, 100);
+    tree.position.y = -5.8;
+  }
+
+  for (let i = 0; i < 15; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(100, 325);
+    tree.position.z = BABYLON.Scalar.RandomRange(90, 150);
+    tree.position.y = -5.8;
+  }
+
+  for (let i = 0; i < 8; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(250, 300);
+    tree.position.z = BABYLON.Scalar.RandomRange(30, 140);
+    tree.position.y = -5.8;
+  }
+
+  
+
+  
+
+  
+
+  //RIGHT LANE
+  for (let i = 0; i < 8; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(-365, -295);
+    tree.position.z = BABYLON.Scalar.RandomRange(-230, -180);
+    tree.position.y = -5.8;
+  }
+
+  for (let i = 0; i < 25; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(-365, -330);
+    tree.position.z = BABYLON.Scalar.RandomRange(-150, 200);
+    tree.position.y = -5.8;
+  }
+
+  for (let i = 0; i < 18; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(-325, -230);
+    tree.position.z = BABYLON.Scalar.RandomRange(100, 210);
+    tree.position.y = -5.8;
+  }
+
+  for (let i = 0; i < 20; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(-225, 0);
+    tree.position.z = BABYLON.Scalar.RandomRange(155, 230);
+    tree.position.y = -5.8;
+  }
+
+  for (let i = 0; i < 10; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(5, 100);
+    tree.position.z = BABYLON.Scalar.RandomRange(180, 230);
+    tree.position.y = -5.8;
+  }
+
+  for (let i = 0; i < 8; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(100, 230);
+    tree.position.z = BABYLON.Scalar.RandomRange(210, 230);
+    tree.position.y = -5.8;
+  }
+
+  for (let i = 0; i < 6; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(210, 360);
+    tree.position.z = BABYLON.Scalar.RandomRange(218, 230);
+    tree.position.y = -5.8;
+  }
+
+  for (let i = 0; i < 3; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(340, 380);
+    tree.position.z = BABYLON.Scalar.RandomRange(180, 230);
+    tree.position.y = -5.8;
+  }
+
+  for (let i = 0; i < 8; i++) {
+    const tree = new BABYLON.Sprite("tree", spriteTrees);
+    tree.width = 20
+    tree.height = 50
+    tree.position.x = BABYLON.Scalar.RandomRange(372, 380);
+    tree.position.z = BABYLON.Scalar.RandomRange(0, 180);
+    tree.position.y = -5.8;
+  }
+
 
 
 
@@ -272,7 +455,7 @@ function onSceneReady(scene) {
     }
   });
   barriers.rotation.y = 1.565;
-  barriers.position.z = -93;
+  barriers.position.z = -92;
   barriers.position.x = 135;
 
 
