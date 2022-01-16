@@ -248,6 +248,15 @@ function onSceneReady(scene) {
     }
   });
 
+  // Create finish line
+  const whiteMaterial = new BABYLON.StandardMaterial("White");
+  whiteMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
+
+  const blackMaterial = new BABYLON.StandardMaterial("Black");
+  blackMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+
+  
+
   //TREES DECORATION
 
   const spriteTrees = new BABYLON.SpriteManager("treesManager", "./assets/models/Tree.png", 5000, { width: 2048, height: 4096 }, scene);
