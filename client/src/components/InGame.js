@@ -249,13 +249,36 @@ function onSceneReady(scene) {
   });
 
   // Create finish line
+  var grid = {
+    'h' : 8,
+    'w' : 8
+  };
+
+  const tiledGround = new BABYLON.MeshBuilder.CreateTiledGround("Tiled Ground", {xmin: -3, zmin: -3, xmax: 3, zmax: 3, subdivisions: grid});
+
   const whiteMaterial = new BABYLON.StandardMaterial("White");
   whiteMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
 
   const blackMaterial = new BABYLON.StandardMaterial("Black");
   blackMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
 
-  
+  const multimat = new BABYLON.MultiMaterial("multi", scene);
+  multimat.subMaterials.push(whiteMaterial);
+  multimat.subMaterials.push(blackMaterial);
+
+  tiledGround.material = multimat;
+
+  const verticesCount = tiledGround.getTotalVertices();
+  const tileIndicesLength = tiledGround.getIndices().length / (grid.w * grid.h);
+
+  tiledGround.subMeshes = [];
+  let base = 0;
+  for (let row = 0; row < grid.h; row++) {
+      for (let col = 0; col < grid.w; col++) {
+          tiledGround.subMeshes.push(new BABYLON.SubMesh(row%2 ^ col%2, 0, verticesCount, base , tileIndicesLength, tiledGround));
+          base += tileIndicesLength;
+      }
+  }
 
   //TREES DECORATION
 
