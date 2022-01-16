@@ -18,15 +18,15 @@ function onSceneReady(scene) {
   /* ----------Camera---------- */
 
   // Debug Camera
-  var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 10, BABYLON.Vector3.Zero(), scene);
-  camera.attachControl(scene, true);
+  //var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 10, BABYLON.Vector3.Zero(), scene);
+  //camera.attachControl(scene, true);
 
   // Final Camera
-  /*
+  
     var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 10, -20), scene);
     camera.setTarget(BABYLON.Vector3.Zero());
     camera.attachControl(scene, true);
-  */
+  
 
 
 
