@@ -251,10 +251,10 @@ function onSceneReady(scene) {
   // Create finish line
   var grid = {
     'h' : 8,
-    'w' : 8
+    'w' : 15
   };
 
-  const tiledGround = new BABYLON.MeshBuilder.CreateTiledGround("Tiled Ground", {xmin: -3, zmin: -3, xmax: 3, zmax: 3, subdivisions: grid});
+  const tiledGround = new BABYLON.MeshBuilder.CreateTiledGround("Tiled Ground", {xmin: -150, zmin: -12, xmax: -110, zmax: -5, subdivisions: grid});
 
   const whiteMaterial = new BABYLON.StandardMaterial("White");
   whiteMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
@@ -279,6 +279,37 @@ function onSceneReady(scene) {
           base += tileIndicesLength;
       }
   }
+
+  tiledGround.position.y = 0.5;
+
+  const checkpoint1 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 30, diameter: 16}, scene);
+  const checkpoint2 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 30, diameter: 16}, scene);
+  const checkpoint3 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 30, diameter: 16}, scene);
+  const checkpoint4 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 30, diameter: 16}, scene);
+  
+  var cylinderMat = new BABYLON.StandardMaterial("cylinderMat");
+  cylinderMat.alpha = 0.5;
+  checkpoint1.material = cylinderMat;
+  checkpoint2.material = cylinderMat;
+  checkpoint3.material = cylinderMat;
+  checkpoint4.material = cylinderMat;
+
+  checkpoint1.position.y = 15;
+  checkpoint2.position.y = 15;
+  checkpoint3.position.y = 15;
+  checkpoint4.position.y = 15;
+
+  checkpoint1.position.x = -166;
+  checkpoint1.position.z = -200;
+
+  checkpoint2.position.x = -70;
+  checkpoint2.position.z = 120;
+
+  checkpoint3.position.x = 330;
+  checkpoint3.position.z = 180;
+
+  checkpoint4.position.x = 165;
+  checkpoint4.position.z = 60;
 
   //TREES DECORATION
 
