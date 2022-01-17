@@ -324,36 +324,37 @@ function onSceneReady(scene) {
   var cp4 = 0;
   var passFinish = 0;
 
-  if (car.intersectsMesh(finishLine, false)) {
+  if (car.intersectsMesh(finishLine)) {
     passStart = 1;
     console.log("START");
   }
-  if (car.intersectsMesh(checkpoint1, false)) {
+  if (car.intersectsMesh(checkpoint1)) {
     if (passStart === 1) {
       cp1 = 1;
       console.log("ONE");
       checkpoint1.material = cylinderMatPass;
     }
+    console.log(cp1);
   }
-  if (car.intersectsMesh(checkpoint2, false)) {
+  if (car.intersectsMesh(checkpoint2)) {
     if (cp1 === 1) {
       cp2 = 1;
       console.log("TWO");
     }
   }
-  if (car.intersectsMesh(checkpoint3, false)) {
+  if (car.intersectsMesh(checkpoint3)) {
     if (cp2 === 1) {
       cp3 = 1;
       console.log("THREE");
     }
   }
-  if (car.intersectsMesh(checkpoint4, false)) {
+  if (car.intersectsMesh(checkpoint4)) {
     if (cp3 === 1) {
       cp4 = 1;
       console.log("FOUR");
     }
   }
-  if (car.intersectsMesh(finishLine, false)) {
+  if (car.intersectsMesh(finishLine)) {
     if (cp4 === 1 && passStart === 1) {
       passFinish = 1;
       passStart = 0;
