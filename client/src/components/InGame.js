@@ -254,7 +254,7 @@ function onSceneReady(scene) {
     'w' : 15
   };
 
-  const tiledGround = new BABYLON.MeshBuilder.CreateTiledGround("Tiled Ground", {xmin: -165, zmin: -50, xmax: -145, zmax: -45, subdivisions: grid});
+  const finishLine = new BABYLON.MeshBuilder.CreateTiledGround("finishLine", {xmin: -165, zmin: -50, xmax: -145, zmax: -45, subdivisions: grid});
 
   const whiteMaterial = new BABYLON.StandardMaterial("White");
   whiteMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
@@ -266,21 +266,21 @@ function onSceneReady(scene) {
   multimat.subMaterials.push(whiteMaterial);
   multimat.subMaterials.push(blackMaterial);
 
-  tiledGround.material = multimat;
+  finishLine.material = multimat;
 
-  const verticesCount = tiledGround.getTotalVertices();
-  const tileIndicesLength = tiledGround.getIndices().length / (grid.w * grid.h);
+  const verticesCount = finishLine.getTotalVertices();
+  const tileIndicesLength = finishLine.getIndices().length / (grid.w * grid.h);
 
-  tiledGround.subMeshes = [];
+  finishLine.subMeshes = [];
   let base = 0;
   for (let row = 0; row < grid.h; row++) {
       for (let col = 0; col < grid.w; col++) {
-          tiledGround.subMeshes.push(new BABYLON.SubMesh(row%2 ^ col%2, 0, verticesCount, base , tileIndicesLength, tiledGround));
+          finishLine.subMeshes.push(new BABYLON.SubMesh(row%2 ^ col%2, 0, verticesCount, base , tileIndicesLength, finishLine));
           base += tileIndicesLength;
       }
   }
 
-  tiledGround.position.y = 1;
+  finishLine.position.y = 1;
 
   // Checkpoints
 
@@ -324,37 +324,37 @@ function onSceneReady(scene) {
   var cp4 = 0;
   var passFinish = 0;
 
-  if (car.intersectsMesh(tiledGround, true)) {
+  if (car.intersectsMesh(finishLine, false)) {
     passStart = 1;
     console.log("START");
   }
-  if (car.intersectsMesh(checkpoint1, true)) {
-    if (passStart == 1) {
+  if (car.intersectsMesh(checkpoint1, false)) {
+    if (passStart === 1) {
       cp1 = 1;
       console.log("ONE");
       checkpoint1.material = cylinderMatPass;
     }
   }
-  if (car.intersectsMesh(checkpoint2, true)) {
-    if (cp1 == 1) {
+  if (car.intersectsMesh(checkpoint2, false)) {
+    if (cp1 === 1) {
       cp2 = 1;
       console.log("TWO");
     }
   }
-  if (car.intersectsMesh(checkpoint3, true)) {
-    if (cp2 == 1) {
+  if (car.intersectsMesh(checkpoint3, false)) {
+    if (cp2 === 1) {
       cp3 = 1;
       console.log("THREE");
     }
   }
-  if (car.intersectsMesh(checkpoint4, true)) {
-    if (cp3 == 1) {
+  if (car.intersectsMesh(checkpoint4, false)) {
+    if (cp3 === 1) {
       cp4 = 1;
       console.log("FOUR");
     }
   }
-  if (car.intersectsMesh(tiledGround, true)) {
-    if (cp4 == 1 && passStart == 1) {
+  if (car.intersectsMesh(finishLine, false)) {
+    if (cp4 === 1 && passStart === 1) {
       passFinish = 1;
       passStart = 0;
       console.log("FINISH");
