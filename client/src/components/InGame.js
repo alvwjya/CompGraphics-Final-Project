@@ -1,5 +1,6 @@
 import React from "react";
 import * as BABYLON from "@babylonjs/core";
+import * as GUI from "@babylonjs/gui";
 import SceneComponent from 'babylonjs-hook'; // if you install 'babylonjs-hook' NPM.
 import 'babylonjs-loaders'
 import "../App.css";
@@ -324,7 +325,18 @@ function onSceneReady(scene) {
   var cp4 = 0;
   var passFinish = 0;
 
-  
+  // Race Stopwatch
+  //var raceTime = new GUI.TextBlock();
+  //raceTime.text = "Hello";
+
+  //var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+  var text1 = new GUI.TextBlock();
+  text1.text = "Hello world";
+  text1.color = "white";
+  text1.fontSize = 24;
+  //advancedTexture.addControl(text1);  
+
 
   //TREES DECORATION
 
