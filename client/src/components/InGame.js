@@ -282,6 +282,8 @@ function onSceneReady(scene) {
 
   tiledGround.position.y = 0.5;
 
+  // Checkpoints
+
   const checkpoint1 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 30, diameter: 16}, scene);
   const checkpoint2 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 30, diameter: 16}, scene);
   const checkpoint3 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 30, diameter: 16}, scene);
@@ -310,6 +312,46 @@ function onSceneReady(scene) {
 
   checkpoint4.position.x = 165;
   checkpoint4.position.z = 60;
+
+  // Functionality of finish line and checkpoints
+
+  var passStart = 0;
+  var cp1 = 0;
+  var cp2 = 0;
+  var cp3 = 0;
+  var cp4 = 0;
+  var passFinish = 0;
+
+  if (car.intersectsMesh(tiledGround, true)) {
+    passStart = 1;
+  }
+  if (car.intersectsMesh(checkpoint1, true)) {
+    if (passStart == 1) {
+      cp1 = 1;
+    }
+  }
+  if (car.intersectsMesh(checkpoint2, true)) {
+    if (cp1 == 1) {
+      cp2 = 1;
+    }
+  }
+  if (car.intersectsMesh(checkpoint3, true)) {
+    if (cp2 == 1) {
+      cp3 = 1;
+    }
+  }
+  if (car.intersectsMesh(checkpoint4, true)) {
+    if (cp3 == 1) {
+      cp4 = 1;
+    }
+  }
+  if (car.intersectsMesh(tiledGround, true)) {
+    if (cp4 == 1 && passStart == 1) {
+      passFinish = 1;
+      passStart = 0;
+      
+    }
+  }
 
   //TREES DECORATION
 
