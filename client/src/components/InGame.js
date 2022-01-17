@@ -280,7 +280,7 @@ function onSceneReady(scene) {
       }
   }
 
-  tiledGround.position.y = 0.5;
+  tiledGround.position.y = 1;
 
   // Checkpoints
 
@@ -290,7 +290,9 @@ function onSceneReady(scene) {
   const checkpoint4 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 30, diameter: 16}, scene);
   
   var cylinderMat = new BABYLON.StandardMaterial("cylinderMat");
+  var cylinderMatPass = new BABYLON.StandardMaterial("cylinderMatPass");
   cylinderMat.alpha = 0.5;
+  cylinderMatPass.alpha = 0;
   checkpoint1.material = cylinderMat;
   checkpoint2.material = cylinderMat;
   checkpoint3.material = cylinderMat;
@@ -324,32 +326,38 @@ function onSceneReady(scene) {
 
   if (car.intersectsMesh(tiledGround, true)) {
     passStart = 1;
+    console.log("START");
   }
   if (car.intersectsMesh(checkpoint1, true)) {
     if (passStart == 1) {
       cp1 = 1;
+      console.log("ONE");
+      checkpoint1.material = cylinderMatPass;
     }
   }
   if (car.intersectsMesh(checkpoint2, true)) {
     if (cp1 == 1) {
       cp2 = 1;
+      console.log("TWO");
     }
   }
   if (car.intersectsMesh(checkpoint3, true)) {
     if (cp2 == 1) {
       cp3 = 1;
+      console.log("THREE");
     }
   }
   if (car.intersectsMesh(checkpoint4, true)) {
     if (cp3 == 1) {
       cp4 = 1;
+      console.log("FOUR");
     }
   }
   if (car.intersectsMesh(tiledGround, true)) {
     if (cp4 == 1 && passStart == 1) {
       passFinish = 1;
       passStart = 0;
-      
+      console.log("FINISH");
     }
   }
 
