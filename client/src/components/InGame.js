@@ -250,11 +250,11 @@ function onSceneReady(scene) {
 
   // Create finish line
   var grid = {
-    'h' : 8,
+    'h' : 4,
     'w' : 15
   };
 
-  const tiledGround = new BABYLON.MeshBuilder.CreateTiledGround("Tiled Ground", {xmin: -150, zmin: -12, xmax: -110, zmax: -5, subdivisions: grid});
+  const tiledGround = new BABYLON.MeshBuilder.CreateTiledGround("Tiled Ground", {xmin: -165, zmin: -50, xmax: -145, zmax: -45, subdivisions: grid});
 
   const whiteMaterial = new BABYLON.StandardMaterial("White");
   whiteMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
@@ -299,7 +299,7 @@ function onSceneReady(scene) {
   checkpoint3.position.y = 15;
   checkpoint4.position.y = 15;
 
-  checkpoint1.position.x = -166;
+  checkpoint1.position.x = -255;
   checkpoint1.position.z = -200;
 
   checkpoint2.position.x = -70;
