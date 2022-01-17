@@ -280,7 +280,7 @@ function onSceneReady(scene) {
       }
   }
 
-  finishLine.position.y = 1;
+  finishLine.position.y = 0.5;
 
   // Checkpoints
 
@@ -315,7 +315,7 @@ function onSceneReady(scene) {
   checkpoint4.position.x = 165;
   checkpoint4.position.z = 60;
 
-  // Functionality of finish line and checkpoints
+  // Flag for finish line and checkpoints
 
   var passStart = 0;
   var cp1 = 0;
@@ -324,43 +324,7 @@ function onSceneReady(scene) {
   var cp4 = 0;
   var passFinish = 0;
 
-  if (car.intersectsMesh(finishLine)) {
-    passStart = 1;
-    console.log("START");
-  }
-  if (car.intersectsMesh(checkpoint1)) {
-    if (passStart === 1) {
-      cp1 = 1;
-      console.log("ONE");
-      checkpoint1.material = cylinderMatPass;
-    }
-    console.log(cp1);
-  }
-  if (car.intersectsMesh(checkpoint2)) {
-    if (cp1 === 1) {
-      cp2 = 1;
-      console.log("TWO");
-    }
-  }
-  if (car.intersectsMesh(checkpoint3)) {
-    if (cp2 === 1) {
-      cp3 = 1;
-      console.log("THREE");
-    }
-  }
-  if (car.intersectsMesh(checkpoint4)) {
-    if (cp3 === 1) {
-      cp4 = 1;
-      console.log("FOUR");
-    }
-  }
-  if (car.intersectsMesh(finishLine)) {
-    if (cp4 === 1 && passStart === 1) {
-      passFinish = 1;
-      passStart = 0;
-      console.log("FINISH");
-    }
-  }
+  
 
   //TREES DECORATION
 
@@ -766,6 +730,47 @@ function onSceneReady(scene) {
         pivotFL.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
       }
     }
+
+    scene.onBeforeRenderObservable.add(() => {
+      if (car.intersectsMesh(finishLine)) {
+        if (cp4 === 0 && cp1 === 0) {
+          passStart = 1;
+          console.log("START");
+        }
+        if (cp4 === 1 && passStart === 1) {
+          passFinish = 1;
+          console.log("FINISH");
+        }
+      }
+      if (car.intersectsMesh(checkpoint1)) {
+        if (passStart === 1) {
+          cp1 = 1;
+          console.log("ONE");
+          checkpoint1.material = cylinderMatPass;
+        }
+      }
+      if (car.intersectsMesh(checkpoint2)) {
+        if (cp1 === 1) {
+          cp2 = 1;
+          console.log("TWO");
+          checkpoint2.material = cylinderMatPass;
+       }
+      }
+      if (car.intersectsMesh(checkpoint3)) {
+        if (cp2 === 1) {
+          cp3 = 1;
+          console.log("THREE");
+          checkpoint3.material = cylinderMatPass;
+        }
+      }
+      if (car.intersectsMesh(checkpoint4)) {
+        if (cp3 === 1) {
+          cp4 = 1;
+          console.log("FOUR");
+          checkpoint4.material = cylinderMatPass;
+        }
+      }
+    });
 
     //console.log(car.physicsImpostor.friction)
 
