@@ -18,10 +18,14 @@ function onSceneReady(scene) {
 
   /* ----------Camera---------- */
 
+// Debug Camera
+var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 10, BABYLON.Vector3.Zero(), scene);
+camera.attachControl(scene, true);
+
   // Final Camera
-  var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 10, -20), scene);
-  camera.setTarget(BABYLON.Vector3.Zero());
-  camera.attachControl(scene, true);
+  //var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 10, -20), scene);
+  //camera.setTarget(BABYLON.Vector3.Zero());
+  //camera.attachControl(scene, true);
 
 
 
@@ -320,6 +324,8 @@ function onSceneReady(scene) {
   text1.color = "white";
   text1.fontSize = 24;
   //advancedTexture.addControl(text1);  
+
+  
 
 
   //TREES DECORATION
@@ -803,6 +809,21 @@ function onSceneReady(scene) {
       console.log("FINISH");
       console.log(secondFinal.toString());
       console.log(hourFinal.toString(), minuteFinal.toString(), secondFinal.toString());
+
+      var grid1 = {
+        'h': 1,
+        'w': 1
+      };
+      const timeGround = new BABYLON.MeshBuilder.CreateTiledGround("finishLine", { xmin: -165, zmin: -50, xmax: -145, zmax: -45, subdivisions: grid1 });
+      timeGround.position.y = 1;
+      var timeFinal = hourFinal.toString() + ':' + minuteFinal.toString() + ':' + secondFinal.toString();
+      var textureGround = new BABYLON.DynamicTexture("dynamic texture", {width:512, height:256}, scene);   
+      var materialGround = new BABYLON.StandardMaterial("Mat", scene);
+      materialGround.diffuseTexture = textureGround;
+      timeGround.material = materialGround;
+
+      var font = "bold 54px monospace";
+      textureGround.drawText(timeFinal, 75, 135, font, "black", "white", true, true);
     }
 
   });
