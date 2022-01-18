@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import * as BABYLON from "@babylonjs/core";
 import * as GUI from "@babylonjs/gui";
 import SceneComponent from 'babylonjs-hook'; // if you install 'babylonjs-hook' NPM.
 import 'babylonjs-loaders'
 import "../App.css";
-import { Vector3 } from "@babylonjs/core";
 
 
 function onSceneReady(scene) {
@@ -19,22 +18,30 @@ function onSceneReady(scene) {
 
   /* ----------Camera---------- */
 
-  // Debug Camera
-  var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 10, BABYLON.Vector3.Zero(), scene);
+  // Final Camera
+  var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 10, -20), scene);
+  camera.setTarget(BABYLON.Vector3.Zero());
   camera.attachControl(scene, true);
 
-  // Final Camera
-  /*
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 10, -20), scene);
-    camera.setTarget(BABYLON.Vector3.Zero());
-    camera.attachControl(scene, true);
-  */
 
 
 
   /* ----------Light---------- */
   var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
   light.intensity = 0.7;
+
+
+  /* ----------Skybox---------- */
+  var skybox = BABYLON.MeshBuilder.CreateBox("skybox", { size: 1500 }, scene);
+  var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+  skyboxMaterial.backFaceCulling = false;
+  skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("assets/texture/skybox/skybox", scene);
+  skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+  skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+  skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+  skybox.material = skyboxMaterial;
+
+
 
 
 
@@ -799,26 +806,23 @@ function onSceneReady(scene) {
     }
 
   });
+
   return scene;
 };
 
 function onRender(scene) {
-  /*
-    var canvas = scene.getEngine().getRenderingCanvas();
-    var engine = new BABYLON.Engine(canvas, true);
-    console.log(engine.getFps())
-  */
+
 };
 
 
-export function InGame() {
+export function InGame(val) {
   return (
     <div>
       <div className="text-light sticky-top">
         TIMER
       </div>
       <div className="text-dark">
-        Cool
+
       </div>
       <SceneComponent antialias onSceneReady={onSceneReady} onRender={onRender} id="my-canvas" />
     </div>
