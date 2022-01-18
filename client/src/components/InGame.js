@@ -742,51 +742,48 @@ function onSceneReady(scene) {
         pivotFL.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
       }
     }
-
-    scene.onBeforeRenderObservable.add(() => {
-      if (car.intersectsMesh(finishLine)) {
-        if (cp4 === 0 && cp1 === 0) {
-          passStart = 1;
-          console.log("START");
-        }
-        if (cp4 === 1 && passStart === 1) {
-          passFinish = 1;
-          console.log("FINISH");
-        }
+    
+    if (car.intersectsMesh(finishLine)) {
+      if (cp4 === 0 && cp1 === 0) {
+        passStart = 1;
+        console.log("START");
       }
-      if (car.intersectsMesh(checkpoint1)) {
-        if (passStart === 1) {
-          cp1 = 1;
-          console.log("ONE");
-          checkpoint1.material = cylinderMatPass;
-        }
+      if (cp4 === 1 && passStart === 1) {
+        passFinish = 1;
+        console.log("FINISH");
       }
-      if (car.intersectsMesh(checkpoint2)) {
-        if (cp1 === 1) {
-          cp2 = 1;
-          console.log("TWO");
-          checkpoint2.material = cylinderMatPass;
-       }
+    }
+    if (car.intersectsMesh(checkpoint1)) {
+      if (passStart === 1) {
+        cp1 = 1;
+        console.log("ONE");
+        checkpoint1.material = cylinderMatPass;
       }
-      if (car.intersectsMesh(checkpoint3)) {
-        if (cp2 === 1) {
-          cp3 = 1;
-          console.log("THREE");
-          checkpoint3.material = cylinderMatPass;
-        }
+    }
+    if (car.intersectsMesh(checkpoint2)) {
+      if (cp1 === 1) {
+        cp2 = 1;
+        console.log("TWO");
+        checkpoint2.material = cylinderMatPass;
+     }
+    }
+    if (car.intersectsMesh(checkpoint3)) {
+      if (cp2 === 1) {
+        cp3 = 1;
+        console.log("THREE");
+        checkpoint3.material = cylinderMatPass;
       }
-      if (car.intersectsMesh(checkpoint4)) {
-        if (cp3 === 1) {
-          cp4 = 1;
-          console.log("FOUR");
-          checkpoint4.material = cylinderMatPass;
-        }
+    }
+    if (car.intersectsMesh(checkpoint4)) {
+      if (cp3 === 1) {
+        cp4 = 1;
+        console.log("FOUR");
+        checkpoint4.material = cylinderMatPass;
       }
-    });
-
-    //console.log(car.physicsImpostor.friction)
+    }
 
   });
+    
 
   return scene;
 };
@@ -805,7 +802,7 @@ function onRender(scene) {
 export function InGame() {
   return (
     <div>
-      <nav className="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
+      <nav className="navbar navbar-expand-sm py-5 navbar-dark bg-dark">
         <div className="text-light">
           TIMER
         </div>
