@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import * as BABYLON from "@babylonjs/core";
 import * as GUI from "@babylonjs/gui";
 import SceneComponent from 'babylonjs-hook'; // if you install 'babylonjs-hook' NPM.
 import 'babylonjs-loaders'
 import "../App.css";
 import { Vector3 } from "@babylonjs/core";
+
 
 function onSceneReady(scene) {
 
@@ -85,21 +86,6 @@ function onSceneReady(scene) {
   lightFrontRight.diffuse = new BABYLON.Color3(0.95, 0.91, 0.68);
   lightFrontRight.specular = new BABYLON.Color3(0.94, 0.91, 0.68);
   lightFrontRight.parent = car;
-
-  const lightBackLeft = new BABYLON.SpotLight("spotlightBL", new BABYLON.Vector3(-1, 1.19, -3.0), new BABYLON.Vector3(0, 0, -1), Math.PI / 2, 10, scene)
-  lightBackLeft.intensity = 0.7;
-  lightBackLeft.diffuse = new BABYLON.Color3(0.98, 0, 0);
-  lightBackLeft.specular = new BABYLON.Color3(0.98, 0, 0);
-  lightBackLeft.parent = car;
-
-  const lightBackRight = new BABYLON.SpotLight("spotlightBR", new BABYLON.Vector3(1, 1.15, -3.25), new BABYLON.Vector3(0, 0, -1), Math.PI / 2, 10, scene)
-  lightBackRight.intensity = 0.7;
-  lightBackRight.diffuse = new BABYLON.Color3(0.98, 0, 0);
-  lightBackRight.specular = new BABYLON.Color3(0.98, 0, 0);
-  lightBackRight.parent = car;
-
-
-
 
   // ------- WHEELS -------
   const rimMat = new BABYLON.StandardMaterial("rimMat", scene);
@@ -239,15 +225,6 @@ function onSceneReady(scene) {
 
   car.position.x = -50;
   car.position.z = 20;
-
-  BABYLON.SceneLoader.ImportMesh("", "./assets/models/", "birch_tree.babylon", scene, function (newMeshes) {
-    for (let i = 0; i < newMeshes.length; i++) {
-      newMeshes[i].scaling = new BABYLON.Vector3(12, 12, 12);
-      newMeshes.position.x = -10;
-      newMeshes.position.z = 20;
-
-    }
-  });
 
   // Create finish line
   var grid = {
@@ -432,10 +409,6 @@ function onSceneReady(scene) {
 
 
 
-
-
-
-
   //RIGHT LANE
   for (let i = 0; i < 8; i++) {
     const tree = new BABYLON.Sprite("tree", spriteTrees);
@@ -519,8 +492,6 @@ function onSceneReady(scene) {
   }
 
 
-
-
   const barriers = new BABYLON.Mesh("barriers", scene);
 
   BABYLON.SceneLoader.ImportMesh("", "./assets/models/", "barrier.babylon", scene, function (meshes) {
@@ -539,7 +510,6 @@ function onSceneReady(scene) {
       } else {
         meshes[i].material = whiteMat;
       }
-      //meshes[i].rotation.y = Math.PI / 2;
 
       meshes[i].parent = barriers;
     }
@@ -664,8 +634,22 @@ function onSceneReady(scene) {
   let theta = 0;
   let deltaTheta = 0;
 
+
+  let hourFinal;
+  let minuteFinal;
+  let secondFinal;
+
+  let hourStart;
+  let minuteStart;
+  let secondStart;
+
+  let hourFinish;
+  let minuteFinish;
+  let secondFinish;
+
   // Function that run before evey frame
   scene.registerBeforeRender(function () {
+    let date = new Date();
 
     getValue();
 
@@ -743,31 +727,33 @@ function onSceneReady(scene) {
       }
     }
 
-    var date = new Date();
-    var hourFinal;
-    var minuteFinal;
-    var secondFinal;
-
     if (car.intersectsMesh(finishLine)) {
       if (cp4 === 0 && cp1 === 0) {
-        var hourStart = parseInt(date.getHours());
-        var minuteStart = parseInt(date.getMinutes());
-        var secondStart = parseInt(date.getSeconds());
         passStart = 1;
+
         console.log("START");
         console.log(passStart);
+        hourStart = parseInt(date.getHours());
+        minuteStart = parseInt(date.getMinutes());
+        secondStart = parseInt(date.getSeconds());
       }
+
       if (cp4 === 1 && passStart === 1) {
         passFinish = 1;
-      }
-      if (car.intersectsMesh(checkpoint1)) {
-        if (passStart === 1) {
-          cp1 = 1;
-          console.log("ONE");
-          checkpoint1.material = cylinderMatPass;
-        }
+        hourFinish = parseInt(date.getHours());
+        minuteFinish = parseInt(date.getMinutes());
+        secondFinish = parseInt(date.getSeconds());
       }
     }
+
+    if (car.intersectsMesh(checkpoint1)) {
+      if (passStart === 1) {
+        cp1 = 1;
+        console.log("ONE");
+        checkpoint1.material = cylinderMatPass;
+      }
+    }
+
     if (car.intersectsMesh(checkpoint2)) {
       if (cp1 === 1) {
         cp2 = 1;
@@ -775,6 +761,7 @@ function onSceneReady(scene) {
         checkpoint2.material = cylinderMatPass;
       }
     }
+
     if (car.intersectsMesh(checkpoint3)) {
       if (cp2 === 1) {
         cp3 = 1;
@@ -782,6 +769,7 @@ function onSceneReady(scene) {
         checkpoint3.material = cylinderMatPass;
       }
     }
+
     if (car.intersectsMesh(checkpoint4)) {
       if (cp3 === 1) {
         cp4 = 1;
@@ -790,16 +778,30 @@ function onSceneReady(scene) {
       }
     }
 
+    if (passFinish === 1) {
+      hourFinal = hourFinish - hourStart;
+      if (hourFinal > 0) {
+        minuteFinal = (60 + minuteFinish) - minuteStart;
+      }
+      else {
+        minuteFinal = minuteFinish - minuteStart;
+      }
+
+      if (minuteFinish > minuteStart) {
+        secondFinal = (60 + secondFinish) - secondStart;
+      }
+      else {
+        secondFinal = secondFinish - secondStart;
+      }
+      console.log("FINISH");
+      console.log(secondFinal.toString());
+      console.log(hourFinal.toString(), minuteFinal.toString(), secondFinal.toString());
+    }
 
   });
-
-
   return scene;
 };
 
-
-
-//Will run on every frame render.
 function onRender(scene) {
   /*
     var canvas = scene.getEngine().getRenderingCanvas();
@@ -808,6 +810,7 @@ function onRender(scene) {
   */
 };
 
+
 export function InGame() {
   return (
     <div>
@@ -815,7 +818,7 @@ export function InGame() {
         TIMER
       </div>
       <div className="text-dark">
-        TIMER
+        Cool
       </div>
       <SceneComponent antialias onSceneReady={onSceneReady} onRender={onRender} id="my-canvas" />
     </div>
