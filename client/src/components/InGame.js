@@ -251,11 +251,11 @@ function onSceneReady(scene) {
 
   // Create finish line
   var grid = {
-    'h' : 4,
-    'w' : 15
+    'h': 4,
+    'w': 15
   };
 
-  const finishLine = new BABYLON.MeshBuilder.CreateTiledGround("finishLine", {xmin: -165, zmin: -50, xmax: -145, zmax: -45, subdivisions: grid});
+  const finishLine = new BABYLON.MeshBuilder.CreateTiledGround("finishLine", { xmin: -165, zmin: -50, xmax: -145, zmax: -45, subdivisions: grid });
 
   const whiteMaterial = new BABYLON.StandardMaterial("White");
   whiteMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
@@ -275,21 +275,21 @@ function onSceneReady(scene) {
   finishLine.subMeshes = [];
   let base = 0;
   for (let row = 0; row < grid.h; row++) {
-      for (let col = 0; col < grid.w; col++) {
-          finishLine.subMeshes.push(new BABYLON.SubMesh(row%2 ^ col%2, 0, verticesCount, base , tileIndicesLength, finishLine));
-          base += tileIndicesLength;
-      }
+    for (let col = 0; col < grid.w; col++) {
+      finishLine.subMeshes.push(new BABYLON.SubMesh(row % 2 ^ col % 2, 0, verticesCount, base, tileIndicesLength, finishLine));
+      base += tileIndicesLength;
+    }
   }
 
   finishLine.position.y = 0.5;
 
   // Checkpoints
 
-  const checkpoint1 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 30, diameter: 16}, scene);
-  const checkpoint2 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 30, diameter: 16}, scene);
-  const checkpoint3 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 30, diameter: 16}, scene);
-  const checkpoint4 = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 30, diameter: 16}, scene);
-  
+  const checkpoint1 = BABYLON.MeshBuilder.CreateCylinder("cylinder", { height: 30, diameter: 16 }, scene);
+  const checkpoint2 = BABYLON.MeshBuilder.CreateCylinder("cylinder", { height: 30, diameter: 16 }, scene);
+  const checkpoint3 = BABYLON.MeshBuilder.CreateCylinder("cylinder", { height: 30, diameter: 16 }, scene);
+  const checkpoint4 = BABYLON.MeshBuilder.CreateCylinder("cylinder", { height: 30, diameter: 16 }, scene);
+
   var cylinderMat = new BABYLON.StandardMaterial("cylinderMat");
   var cylinderMatPass = new BABYLON.StandardMaterial("cylinderMatPass");
   cylinderMat.alpha = 0.5;
@@ -343,7 +343,7 @@ function onSceneReady(scene) {
   const spriteTrees = new BABYLON.SpriteManager("treesManager", "./assets/models/Tree.png", 5000, { width: 2048, height: 4096 }, scene);
 
 
-  
+
   //We create trees at random positions
 
   //LEFT LANE
@@ -430,11 +430,11 @@ function onSceneReady(scene) {
     tree.position.y = -5.8;
   }
 
-  
 
-  
 
-  
+
+
+
 
   //RIGHT LANE
   for (let i = 0; i < 8; i++) {
@@ -747,7 +747,7 @@ function onSceneReady(scene) {
     var hourFinal;
     var minuteFinal;
     var secondFinal;
-    
+
     if (car.intersectsMesh(finishLine)) {
       if (cp4 === 0 && cp1 === 0) {
         var hourStart = parseInt(date.getHours());
@@ -759,12 +759,13 @@ function onSceneReady(scene) {
       }
       if (cp4 === 1 && passStart === 1) {
         passFinish = 1;
-    }
-    if (car.intersectsMesh(checkpoint1)) {
-      if (passStart === 1) {
-        cp1 = 1;
-        console.log("ONE");
-        checkpoint1.material = cylinderMatPass;
+      }
+      if (car.intersectsMesh(checkpoint1)) {
+        if (passStart === 1) {
+          cp1 = 1;
+          console.log("ONE");
+          checkpoint1.material = cylinderMatPass;
+        }
       }
     }
     if (car.intersectsMesh(checkpoint2)) {
@@ -772,7 +773,7 @@ function onSceneReady(scene) {
         cp2 = 1;
         console.log("TWO");
         checkpoint2.material = cylinderMatPass;
-     }
+      }
     }
     if (car.intersectsMesh(checkpoint3)) {
       if (cp2 === 1) {
@@ -791,7 +792,7 @@ function onSceneReady(scene) {
 
 
   });
-    
+
 
   return scene;
 };
