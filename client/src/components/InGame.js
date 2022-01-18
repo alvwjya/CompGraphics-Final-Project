@@ -802,11 +802,9 @@ function onRender(scene) {
 export function InGame() {
   return (
     <div>
-      <nav className="navbar navbar-expand-sm py-5 navbar-dark bg-dark">
-        <div className="text-light">
-          TIMER
-        </div>
-      </nav>
+      <div className="text-light">
+        TIMER
+      </div>
       <SceneComponent antialias onSceneReady={onSceneReady} onRender={onRender} id="my-canvas" />
     </div>
   )
