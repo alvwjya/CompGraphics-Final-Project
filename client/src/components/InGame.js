@@ -742,16 +742,23 @@ function onSceneReady(scene) {
         pivotFL.rotate(BABYLON.Axis.Y, deltaTheta, BABYLON.Space.LOCAL);
       }
     }
+
+    var date = new Date();
+    var hourFinal;
+    var minuteFinal;
+    var secondFinal;
     
     if (car.intersectsMesh(finishLine)) {
       if (cp4 === 0 && cp1 === 0) {
+        var hourStart = parseInt(date.getHours());
+        var minuteStart = parseInt(date.getMinutes());
+        var secondStart = parseInt(date.getSeconds());
         passStart = 1;
         console.log("START");
+        console.log(passStart);
       }
       if (cp4 === 1 && passStart === 1) {
         passFinish = 1;
-        console.log("FINISH");
-      }
     }
     if (car.intersectsMesh(checkpoint1)) {
       if (passStart === 1) {
@@ -782,6 +789,7 @@ function onSceneReady(scene) {
       }
     }
 
+
   });
     
 
@@ -802,7 +810,10 @@ function onRender(scene) {
 export function InGame() {
   return (
     <div>
-      <div className="text-light">
+      <div className="text-light sticky-top">
+        TIMER
+      </div>
+      <div className="text-dark">
         TIMER
       </div>
       <SceneComponent antialias onSceneReady={onSceneReady} onRender={onRender} id="my-canvas" />
